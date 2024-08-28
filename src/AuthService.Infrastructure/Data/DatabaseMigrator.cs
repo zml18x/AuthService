@@ -10,6 +10,12 @@ public static class DatabaseMigrator
     {
         using (var scope = serviceProvider.CreateScope())
         {
+            var context = scope.ServiceProvider.GetRequiredService<AppIdentityDbContext>();
+            context.Database.Migrate();
+        }
+        
+        using (var scope = serviceProvider.CreateScope())
+        {
             var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             context.Database.Migrate();
         }
