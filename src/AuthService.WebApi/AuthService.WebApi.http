@@ -1,6 +1,1 @@
-@AuthService.WebApi_HostAddress = http://localhost:5294
-
-GET {{AuthService.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+@AuthService.WebApi_HostAddress = http://localhost:7099
