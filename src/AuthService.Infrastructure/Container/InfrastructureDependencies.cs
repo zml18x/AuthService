@@ -1,9 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.Identity;
 using AuthService.Infrastructure.Data.Context;
+using AuthService.Infrastructure.Exceptions;
+using AuthService.Infrastructure.Repository;
+using AuthService.Infrastructure.Services;
+using AuthService.Application.Interfaces;
 
 namespace AuthService.Infrastructure.Container;
 
@@ -14,13 +22,20 @@ public static class InfrastructureDependencies
         services
             .ConfigureServices()
             .ConfigureDatabase(configuration)
-            .ConfigureIdentity();
+            .ConfigureIdentity()
+            .ConfigureJwt(configuration);
 
         return services;
     }
     
     private static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddSingleton<IEmailSender<User>, EmailSender>();
+        services.AddSingleton<IEmailService, EmailService>();
+        
         return services;
     }
     
@@ -49,8 +64,32 @@ public static class InfrastructureDependencies
 
                 options.SignIn.RequireConfirmedEmail = true;
             })
-            .AddEntityFrameworkStores<AppDbContext>()
+            .AddEntityFrameworkStores<AppIdentityDbContext>()
             .AddDefaultTokenProviders();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureJwt(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = configuration["JWT:Issuer"],
+                ValidAudience = configuration["JWT:Audience"],
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"] ??
+                    throw new MissingConfigurationException("JWT key configuration is missing or empty")))
+            };
+        });
 
         return services;
     }
