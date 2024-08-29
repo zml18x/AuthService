@@ -134,38 +134,38 @@
 
 ### Installation
 
-#### 1. Clone the repository:
+- #### 1. Clone the repository:
   ```console
    git clone https://github.com/zml18x/AuthService
    cd AuthService
   ```
 
-#### 2. Run the Docker containers:
+- #### 2. Run the Docker containers:
   ```console
    docker-compose up -d
   ```
 
-#### 3. Update the appsettings.json file in your project to include the connection string for PostgreSQL:
+- #### 3. Update the appsettings.json file in your project to include the connection string for PostgreSQL:
   ```json
    "ConnectionStrings": {
      "DefaultConnection": "Host=localhost;Port=5432;Database=AuthServiceDb;Username=[userNameFromDockerComposeFile];Password=[passwordFromDockerComposeFile]"
    }
- ```
+  ```
 
-#### 4. Add the required secrets for SendGrid:
+- #### 4. Add the required secrets for SendGrid:
 
-Set these values in your local secrets manager:
-   ```console
-   dotnet user-secrets set "SENDGRID_API_KEY" "YOUR_SENDGRID_API_KEY"
-   dotnet user-secrets set "SENDGRID_SENDER_EMAIL" "YOUR_SENDGRID_SENDER_EMAIL"
-   ```
+   Set these values in your local secrets manager:
+     ```console
+     dotnet user-secrets set "SENDGRID_API_KEY" "YOUR_SENDGRID_API_KEY"
+     dotnet user-secrets set "SENDGRID_SENDER_EMAIL" "YOUR_SENDGRID_SENDER_EMAIL"
+     ```
 
-#### 5. Run the application:
+- #### 5. Run the application:
   ```bash
    dotnet run
-```
+  ```
 
-#### 6. Access the application via
+- #### 6. Access the application via
    `http://localhost:7099`
 
 ### Using pgAdmin
