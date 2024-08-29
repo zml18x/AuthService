@@ -293,7 +293,7 @@ public class AuthController(SignInManager<User> signInManager, ITokenService tok
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Admin, Manager, Employee")]
+    [Authorize(Roles = "Admin")]
     [HttpPost("send-confirmation-change-email")]
     public async Task<IActionResult> ChangeEmailAsync([FromBody] ChangeEmailRequest request)
     {
@@ -337,7 +337,7 @@ public class AuthController(SignInManager<User> signInManager, ITokenService tok
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Admin, Manager, Employee")]
+    [Authorize(Roles = "Admin")]
     [HttpPost("confirm-changed-email")]
     public async Task<IActionResult> ConfirmChangedEmail([FromBody] ConfirmationChangeEmailRequest request)
     {
@@ -387,7 +387,7 @@ public class AuthController(SignInManager<User> signInManager, ITokenService tok
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Admin, Manager, Employee")]
+    [Authorize(Roles = "Admin")]
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePasswordAsync([FromBody] ChangePasswordRequest request)
     {
